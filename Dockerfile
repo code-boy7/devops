@@ -1,17 +1,8 @@
-FROM alpine/git as repo
-
-MAINTAINER devopsdk@gmail.com
-
-WORKDIR /app
-
-RUN git clone https://github.com/MithunTechnologiesDevOps/maven-web-application.git
-
-FROM maven:3.5-jdk-8-alpine as build
-WORKDIR /app
-COPY --from=repo /app/maven-web-application /app
-RUN mvn install
-
-FROM tomcat:8.0.20-jre8
-COPY --from=build /app/target/maven-web-application*.war /usr/local/tomcat/webapps/maven-web-application.war
-
-EXPOSE 8080
+FROM ubuntu
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update
+RUN apt-get install apache2 -y
+RUN apt-get install apache2-utils -y
+RUN apt-get clean
+EXPOSE 80
+CMD ["apache2ctl","-D","FOREGROUND"]
